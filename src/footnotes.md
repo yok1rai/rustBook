@@ -25,3 +25,4 @@ Ownership is Rust's system for managing memory. Every value in Rust has an owner
 When the owner goes out of scope, the value is automatically dropped and its memory is released.
 
 Rust's ownership rules are checked at compile time, allowing Rust to manage memory safely without requiring a garbage collector.
+
