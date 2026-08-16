@@ -136,3 +136,37 @@ Used for:
 - enum variant names, like `Direction::North`
 - trait names, like `trait Drawable {}`
 - type aliases, like `type UserId = u32;`
+
+## Number Limits
+
+### Integer Limits
+
+formula for signed and unsigned integers' limit is:
+
+Unsigned:
+
+$$
+n = \text{bit} \\
+\text{min} = 0 \\
+\text{max} = 2^{n} - 1 \\
+\text{number} \in [\text{min}, \text{max}]
+$$
+
+signed:
+
+$$
+n = \text{bit} \\
+\text{min} = -2^{n -1} \\
+\text{max} = 2^{n - 1} - 1 \\
+\text{number} \in [\text{min}, \text{max}]
+$$
+
+#### Limit list for each integers
+
+| Length                 | Signed                                                    | Unsigned                          |
+| :--------------------- | :-------------------------------------------------------- | :-------------------------------- |
+| 8-bit                  | $[-128, 127]$                                             | $[0, 255]$                        |
+| 16-bit                 | $[-32,768, 32,767]$                                       | $[0, 65,535]$                     |
+| 32-bit                 | $[-2,147,483,648, 2,147,483,647]$                         | $[0, 4,294,967,295]$              |
+| 64-bit                 | $[-9,223,372,036,854,775,808, 9,223,372,036,854,775,807]$ | $[0, 18,446,744,073,709,551,615]$ |
+| 128-bit                | $[-2^{127}, 2^{127}-1]$                                   | $[0, 2^{128}-1]$                  |

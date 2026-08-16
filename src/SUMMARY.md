@@ -5,4 +5,5 @@
 - [Hello, World](./chapter_3.md)
 - [Concepts](./chapter_4.md)
     - [Variables](./chapter_5.md)
+    - [Basic Types](./chapter_6.md)
 - [foot notes](./footnotes.md)
