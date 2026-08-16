@@ -187,7 +187,7 @@ You can convert a floating-point number into an integer (or vice versa) through 
 fn main() {
     let x = 3.14; // f64
     let y = x as i32; // i32. 3.14 -> 3
-    let z = x as f32; // f64. 3 -> 3.0
+    let z = y as f32; // f64. 3 -> 3.0
     println!("{x} {y} {z}");
 }
 ```
