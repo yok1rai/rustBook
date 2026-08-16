@@ -4,7 +4,7 @@ Now that we have installed Rust, we can start writing some Rust code.
 
 Rust source files use the `.rs` extension. Create a new directory and inside it, create a file named `main.rs`.
 
-For executable Rust programs, there must be a function called `main`. This function is the **entry point** of the program—the first function that runs when the program starts.
+For executable Rust programs, there must be a function called `main`. This function is the **entry point** of the program, the first function that runs when the program starts.
 
 To define a function, we use the `fn` keyword:
 
@@ -68,7 +68,7 @@ Hello, World!
 Hello, World!
 ```
 
-And that's it—we've successfully written, compiled, and executed our first Rust program.
+And that's it, we've successfully written, compiled, and executed our first Rust program.
 
 However, manually invoking `rustc` is not how we normally manage Rust projects. For that, Rust provides **Cargo**.
 
@@ -101,9 +101,9 @@ my_project/
 
 A newly created Cargo binary project contains:
 
-* `Cargo.toml` — the project's manifest file
-* `src/` — the directory containing the project's source code
-* `src/main.rs` — the default binary crate root
+* `Cargo.toml` -> the project's manifest file
+* `src/` -> the directory containing the project's source code
+* `src/main.rs` -> the default binary crate root
 
 ## Cargo.toml
 
@@ -136,13 +136,13 @@ The `[package]` section contains metadata about your package.
 
 Some commonly used fields are:
 
-* `name` — the name of the package
-* `version` — the current package version
-* `edition` — the Rust edition used by the package
-* `rust-version` — the minimum supported Rust version (MSRV)
-* `description` — a short description of the package
-* `license` — the package's license, such as `MIT` or `Apache-2.0`
-* `keywords` — keywords used to describe the package
+* `name` -> the name of the package
+* `version` -> the current package version
+* `edition` -> the Rust edition used by the package
+* `rust-version` -> the minimum supported Rust version (MSRV)
+* `description` -> a short description of the package
+* `license` -> the package's license, such as `MIT` or `Apache-2.0`
+* `keywords` -> keywords used to describe the package
 
 Cargo supports many more package fields, but these are some of the ones you'll encounter most often.
 
@@ -375,11 +375,11 @@ It does **not** remove your source code, `Cargo.toml`, or `Cargo.lock`.
 
 The most important Cargo commands we've covered are:
 
-* `cargo new` — create a new Cargo project
-* `cargo build` — compile the project
-* `cargo run` — compile and run the project
-* `cargo check` — check whether the project compiles without producing the final executable
-* `cargo clean` — remove generated build artifacts
+* `cargo new` -> create a new Cargo project
+* `cargo build` -> compile the project
+* `cargo run` -> compile and run the project
+* `cargo check` -> check whether the project compiles without producing the final executable
+* `cargo clean` -> remove generated build artifacts
 
 And the three most important files/directories introduced so far are:
 
