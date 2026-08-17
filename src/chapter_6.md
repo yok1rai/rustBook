@@ -187,7 +187,7 @@ You can convert a floating-point number into an integer (or vice versa) through 
 fn main() {
     let x = 3.14; // f64
     let y = x as i32; // i32. 3.14 -> 3
-    let z = y as f32; // f64. 3 -> 3.0
+    let z = y as f32; // f32. 3 -> 3.0
     println!("{x} {y} {z}");
 }
 ```
@@ -336,7 +336,7 @@ We write the values in an array as a comma-separated list inside square brackets
 ```rust
 fn main() {
     let arr1 = [1,2,3,4,5];
-    let arr2: [i32;3] = [3.14, 4.15, 2.1];
+    let arr2: [f64;3] = [3.14, 4.15, 2.1];
 }
 ```
 
