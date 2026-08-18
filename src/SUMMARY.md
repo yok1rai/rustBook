@@ -6,4 +6,7 @@
 - [Concepts](./chapter_4.md)
     - [Variables](./chapter_5.md)
     - [Basic Types](./chapter_6.md)
+    - [Functions](./chapter_7.md)
+    - [Comments](./chapter_8.md)
+    - [Control Flow](./chapter_9.md)
 - [foot notes](./footnotes.md)
