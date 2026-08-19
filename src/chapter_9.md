@@ -471,4 +471,436 @@ Since it uses `return`, it immediately exits the function, which makes it imposs
 
 The never type is very flexible, it's essentially treated as any type you need, because by definition it can never produce a value that would contradict that type.
 
-That's why we didn't have to return `(bool, bool, bool)` from that arm, the never type is already compatible with that
+That's why we didn't have to return `(bool, bool, bool)` from that arm, the never type is already compatible with that.
+
+## Repetition with Loops
+
+In Rust, there are several ways to repeat a block. It's often useful to repeat a code block forever, or until you explicitly tell it to stop.
+
+These three are:
+
+- `loop`
+- `while`
+- `for`
+
+### Repeating Code with `loop`
+
+The `loop` keyword is an unconditional loop, similar to `while true` in other languages, but Rust has an explicit block for that.
+
+```rust
+fn main() {
+    loop {
+        println!("hello world");
+    }
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running `target/debug/my_project`
+hello world
+hello world
+hello world
+hello world
+^Chello world
+```
+
+> The symbol `^C` represents when you hit `CTRL+C` to stop a program
+
+Fortunately, Rust provides a way to stop an unconditional loop, and it's the `break` keyword.
+
+Here's an example:
+
+```rust
+fn main() {
+    let mut counter = 0;
+    loop {
+        if counter >= 10 {
+            break;
+        }
+        println!("counter is at {counter}");
+        counter += 1;
+    }
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running `target/debug/my_project`
+counter is at 0
+counter is at 1
+counter is at 2
+counter is at 3
+counter is at 4
+counter is at 5
+counter is at 6
+counter is at 7
+counter is at 8
+counter is at 9
+```
+
+`loop` is an expression, which means it can return a value. How do we do that? With the `break` statement.
+
+```rust
+fn main() {
+    let result = {
+        let mut number = 1;
+
+        loop {
+            number *= 2;
+
+            if number > 100 {
+                break number;
+            }
+        }
+    };
+    println!("First power of 2 greater than 100: {result}");
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running `target/debug/my_project`
+First power of 2 greater than 100: 128
+```
+
+If you don't want to end the loop, but just want to skip that iteration, you can use the `continue` keyword.
+
+```rust
+fn main() {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut idx = 0;
+
+    loop {
+        if idx >= numbers.len() { // len() is a method that returns its length
+            break;
+        }
+        if numbers[idx] % 2 == 0 {
+            idx += 1;
+            continue;
+        }
+        println!("{}", numbers[idx]);
+
+        idx += 1;
+    }
+}
+```
+
+In this program, if the number is even, it skips printing it.
+
+Let's run it:
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running `target/debug/my_project`
+1
+3
+5
+7
+9
+```
+
+> note: this would be cleaner with a `for` loop, but we'll learn that shortly
+
+### Disambiguating with Loop Labels
+
+If you have loops within loops, `break` and `continue` apply to the innermost loop by default. You can optionally give a loop a label, then use that label with `break` or `continue` to specify that those keywords should apply to the labeled loop instead of the innermost one. Loop labels must begin with a single quote.
+
+```rust
+fn main() {
+    let mut count = 0;
+
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+        count += 1;
+    }
+    println!("end count = {count}");
+}
+```
+
+If we run that:
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running `target/debug/my_project`
+count = 0
+remaining = 10
+remaining = 9
+count = 1
+remaining = 10
+remaining = 9
+count = 2
+remaining = 10
+end count = 2
+```
+
+### Repetition with a Conditional `while` Loop
+
+A `while` loop is a conditional loop that stops as soon as its condition is no longer true.
+
+For instance:
+
+```rust
+fn main() {
+    let mut x = 3;
+    while x > 0 {
+        println!("{x}");
+        x -= 1;
+    }
+}
+```
+
+This is a conditional loop, let's run it:
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `target/debug/my_project`
+3
+2
+1
+```
+
+One of the biggest downsides of a `while` loop is that it can't meaningfully return a value (it's technically an expression, but it always evaluates to `()`).
+
+So you can't use it in a `let` statement to get a value out of it.
+
+If we try to:
+
+```rust
+fn main() {
+    let mut x = 3;
+    let result = while x > 0 {
+        if x > 0 {
+            break x;
+        }
+        x -= 1;
+    };
+    println!("{:?}", result);
+}
+```
+
+It would fail:
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+error[E0571]: `break` with value from a `while` loop
+ --> src/main.rs:5:13
+  |
+3 |     let result = while x > 0 {
+  |                  ----------- you can't `break` with a value in a `while` loop
+4 |         if x > 0 {
+5 |             break x;
+  |             ^^^^^^^ can only break with a value inside `loop` or breakable block
+  |
+help: use `break` on its own without a value inside this `while` loop
+  |
+5 -             break x;
+5 +             break;
+  |
+
+For more information about this error, try `rustc --explain E0571`.
+error: could not compile `my_project` (bin "my_project") due to 1 previous error
+```
+
+### Looping Through a Collection with a `for` Loop
+
+Remember this example from the `continue` section?
+
+```rust
+fn main() {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut idx = 0;
+
+    loop {
+        if idx >= numbers.len() {
+            break;
+        }
+        if numbers[idx] % 2 == 0 {
+            idx += 1;
+            continue;
+        }
+        println!("{}", numbers[idx]);
+
+        idx += 1;
+    }
+}
+```
+
+We could rewrite this with a `while` loop:
+
+```rust
+fn main() {
+    let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut idx = 0;
+
+    while numbers.len() > idx {
+        if numbers[idx] % 2 == 0 {
+            idx += 1;
+            continue;
+        }
+        println!("{}", numbers[idx]);
+
+        idx += 1;
+    }
+}
+```
+
+But this is still risky (out-of-bounds errors), easy to get wrong, and a bit long.
+
+For example, if we accidentally changed the condition to `while numbers.len() >= idx`, this would happen:
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running `target/debug/my_project`
+1
+3
+5
+7
+9
+
+thread 'main' (9185) panicked at src/main.rs:6:12:
+index out of bounds: the len is 9 but the index is 9
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+```
+
+It would crash during runtime.
+
+Instead, we can use a `for` loop, which iterates over an entire collection for us.
+
+Its syntax is simple:
+
+```rust
+for item in collection
+```
+
+Let's rewrite the same logic with a `for` loop:
+
+```rust
+fn main() {
+    let numbers = [1,2,3,4,5,6,7,8,9];
+
+    for number in numbers {
+        if number % 2 == 0 {
+            continue;
+        }
+        println!("{number}");
+    }
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running `target/debug/my_project`
+1
+3
+5
+7
+9
+```
+
+#### Range
+
+You may have heard of `range()` in Python, well Rust has a similar, and even more powerful, version of that.
+
+Basically, a range lets you create a sequence of values.
+
+There are 2 versions of it in Rust:
+
+- `MIN..MAX`: exclusive range, MAX is excluded
+- `MIN..=MAX`: inclusive range, MAX is included
+
+It's used with `for` loops a lot.
+
+Let's test it out:
+
+```rust
+fn main()  {
+    for i in 1..5 {
+        println!("{i}");
+    }
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running `target/debug/my_project`
+1
+2
+3
+4
+```
+
+With an inclusive range:
+
+```rust
+fn main()  {
+    for i in 1..=5 {
+        println!("{i}");
+    }
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.14s
+     Running `target/debug/my_project`
+1
+2
+3
+4
+5
+```
+
+You can even reverse it using `.rev()`, but first you need to wrap it in parentheses.
+
+```rust
+fn main() {
+    for i in (1..4).rev() {
+        println!("{i}!");
+    }
+    println!("LIFTOFF!!!");
+}
+```
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running `target/debug/my_project`
+3!
+2!
+1!
+LIFTOFF!!!
+```
