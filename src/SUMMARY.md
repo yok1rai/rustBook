@@ -9,4 +9,5 @@
     - [Functions](./chapter_7.md)
     - [Comments](./chapter_8.md)
     - [Control Flow](./chapter_9.md)
+    - [Input/Output](./chapter_10.md)
 - [foot notes](./footnotes.md)
