@@ -10,4 +10,5 @@
     - [Comments](./chapter_8.md)
     - [Control Flow](./chapter_9.md)
     - [Input/Output](./chapter_10.md)
+- [Ownership](./chapter_11.md)
 - [foot notes](./footnotes.md)
