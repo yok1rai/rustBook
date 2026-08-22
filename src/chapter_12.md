@@ -1,5 +1,67 @@
 # Safe Code & Memory
 
+## Why Safe Code Matters
+
+One of the biggest risks in low-level programming is **undefined behavior (UB)**, a state where the language spec places no constraints on what the program does next. Anything could happen, and there's no way to reason about it.
+
+Take this C snippet:
+
+```c
+#include <stdio.h>
+
+int main() {
+    int arr[] = {1, 2, 3}; // Only three elements exist
+
+    printf("%d\n", arr[3]); // Reads the (nonexistent) fourth element
+
+    return 0;
+}
+```
+
+Compiling and running it:
+
+```bash
+$ gcc main.c -o main
+$ ./main
+-720905728
+```
+
+You get some odd number back. The reason isn't that the number is "randomly generated", it's that `arr[3]` points past the end of the array, into memory the array doesn't own. C simply doesn't define what should happen here, so whatever bytes happen to sit at that address get interpreted as an int.
+
+Now the Rust equivalent:
+
+```rust
+fn main() {
+    let arr = [1, 2, 3];
+
+    println!("{}", arr[3]);
+}
+```
+
+Rust refuses to compile this:
+
+```bash
+$ cargo run
+   Compiling my_project v0.1.0 (/home/yok1rai/my_project)
+
+error: this operation will panic at runtime
+ --> src/main.rs:4:20
+  |
+4 |     println!("{}", arr[3]);
+  |                    ^^^^^^ index out of bounds: the length is 3 but the index is 3
+  |
+  = note: `#[deny(unconditional_panic)]` on by default
+
+error: could not compile `my_project` (bin "my_project") due to 1 previous error
+```
+
+Because the compiler can prove at compile time that index `3` is always invalid for a 3-element array, it stops the build outright rather than letting it ship.
+
+When the index can't be determined ahead of time, Rust doesn't skip the check, it inserts a runtime bounds check instead. An invalid index at runtime causes a controlled panic, not a silent read of unrelated memory.
+
+That's the essence of **memory safety** in Rust: out-of-bounds access is never allowed to happen quietly.
+
+
 ## What Memory Actually Is
 
 To talk about memory safety meaningfully, it helps to first understand what "memory" refers to during program execution.
