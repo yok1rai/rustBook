@@ -11,4 +11,5 @@
     - [Control Flow](./chapter_9.md)
     - [Input/Output](./chapter_10.md)
 - [Ownership](./chapter_11.md)
+    - [Safe Code & Memory](./chapter_12.md)
 - [foot notes](./footnotes.md)
