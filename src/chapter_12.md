@@ -145,13 +145,132 @@ fn main() {
 
 Both `x` and `arr` have a fixed size known at compile time. When `main` returns, their stack storage is automatically reclaimed along with the rest of `main`'s stack frame.
 
+#### Errors with the Stack
+
+**Stack overflow.** the stack has a limited amount of memory. If you use more than it can hold, you will get `stack overflow` and program will crash
+
+recursion is a classic example for that, basically a function that calls itself
+
+```rust
+fn recurse(x: i32) {
+    println!("{x}");
+    recurse(x + 1); // calls itself forever
+}
+
+fn main() {
+    recurse(1); // start
+}
+```
+
+```bash
+$ cargo run
+warning: function cannot return without recursing
+ --> src/main.rs:1:1
+  |
+1 | fn recurse(x: i32) {
+  | ^^^^^^^^^^^^^^^^^^ cannot return without recursing
+2 |     println!("recurse {x}");
+3 |     recurse(x + 1);
+  |     -------------- recursive call site
+  |
+  = help: a `loop` may express intention better if this is on purpose
+  = note: `#[warn(unconditional_recursion)]` on by default
+
+warning: `my_project` (bin "my_project") generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running `target/debug/my_project`
+recurse 1
+recurse 2
+recurse 3
+recurse 4
+recurse 5
+recurse 6
+recurse 7
+recurse 8
+recurse 9
+recurse 10
+recurse 11
+recurse 12
+recurse 13
+recurse 14
+recurse 15
+recurse 16
+recurse 17
+recurse 18
+recurse 19
+recurse 20
+recurse 21
+recurse 22
+recurse 23
+recurse 24
+recurse 25
+recurse 26
+recurse 27
+recurse 28
+recurse 29
+recurse 30
+recurse 31
+recurse 32
+recurse 33
+recurse 34
+recurse 35
+recurse 36
+recurse 37
+recurse 38
+recurse 39
+recurse 40
+recurse 41
+recurse 42
+recurse 43
+.......
+recurse 130823
+recurse 130824
+recurse 130825
+recurse 130826
+recurse 130827
+recurse 130828
+recurse 130829
+recurse 130830
+recurse 130831
+recurse 130832
+recurse 130833
+recurse 130834
+recurse 130835
+recurse 130836
+recurse 130837
+recurse 130838
+recurse 130839
+recurse 130840
+recurse 130841
+recurse 130842
+recurse 130843
+recurse 130844
+recurse 130845
+
+thread 'main' (9631) has overflowed its stack
+fatal runtime error: stack overflow, aborting
+fish: Job 1, 'cargo run' terminated by signal SIGABRT (Abort)
+```
+
+this program works like that:
+
+```mermaid
+flowchart TB
+    entry["main()"] --> rec1["recurse(1)"]
+    subgraph recurse function
+        funcEnt("recurse(x: i32)") --> print
+        print["print the x parameter"] --> rec2["recurse(x + 1)"]
+    end
+    rec1 -->|creates a new stack frame| funcEnt
+    rec2 -->|creates new stack frame| funcEnt
+```
+
 ### The Heap
 
 The heap is a region of memory used for **dynamic memory allocation**. It provides more flexibility than the stack, especially when the size or lifetime of data cannot be determined ahead of time.
 
 Unlike the stack, heap memory isn't automatically reclaimed simply because a function returns. The program needs some mechanism to determine when the allocated memory is no longer needed and reclaim it.
 
-In languages such as C and C++, this is often done manually using functions such as `malloc` and `free`, or `new` and `delete` in C++.
 
 Rust takes a different approach. The programmer can allocate data on the heap, but Rust's **ownership system** automatically determines when that memory should be freed.
 
@@ -169,7 +288,7 @@ When `x` goes out of scope, Rust automatically frees the heap allocation associa
 
 So, in simple terms: the stack is fast and predictable, while the heap is flexible and dynamically managed.
 
-#### Mistakes with the Heap
+#### Errors with the Heap
 
 There are several mistakes you can make with the heap, though most of them are handled automatically by Rust.
 
